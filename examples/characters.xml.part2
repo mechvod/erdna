@@ -1,0 +1,6 @@
+ <Character Name="Aragorn" Race="man" Skill="swordsman">
+  <Description>Aragorn is a skillful warrior and served for a long time as a ranger. He is a legitimate heir of kingdom of Gondor.</Description>
+ </Character>
+ <Character Name="Frodo" Race="hobbit" Skill="">
+  <Description>Frodo is an ordinary hobbit, by occasion mandated to deliver The One Ring to Orodruin for destruction.</Description>
+ </Character>

@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<Weapons>
+ <Weapon Name="Anduril" Type="Sword" Owner="Aragorn">
+  <Description>Anduril is reforged Narsil, broken sword of king Elendil.</Description>
+ </Weapon>
+ <Weapon Name="Glamdring" Type="Sword" Owner="Gandalf">
+  <Description>Glamdring is one of two swords forged by elves in Gondolin. Upon retrieval from trolls it was acquired by Gandalf.</Description>
+ </Weapon>
+ <Weapon Name="Sting" Type="Dagger" Owner="Frodo">
+  <Description>Sting is a dagger used by Bilbo Baggins and later by Frodo as a sword. It glows blue in presence orcs</Description>
+ </Weapon>
+
+</Weapons>
+

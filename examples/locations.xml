@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<Locations>
+ <Location Name="Shire" InhabitantRace="hobbits">
+  <Description>Shire is an area in the northwest part of  Middle-earth. Shire is a pastoral idyllic place inhabited by hobbits.</Description>
+ </Location>
+ <Location Name="Gondor" InhabitantRace="men">
+  <Description>Gondor is a powerful kingdom of men in the west of Middle-earth.</Description>
+ </Location>
+ <Location Name="Rivendell" InhabitantRace="elves">
+  <Description>Rivendell is a kingdom of elves located at the same-named valley. Rivendell is kept isolated and hidden from strangers.</Description>
+ </Location>
+ <Location Name="Moria" InhabitantRace="dwarves">
+  <Description>Moria is a vast complex of subterrain caves, tunnels, mines and large halls in the bowels of Misty Mountains. Moria is the realm of dwarves.</Description>
+ </Location>
+</Locations>

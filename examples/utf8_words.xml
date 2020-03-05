@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Words>
+<Greetings>
+ <Word Lang="am">ታዲያስ</Word>
+ <Word Lang="ar">مرحبا</Word>
+ <Word Lang="bn">হাই</Word>
+ <Word Lang="bs">Ćao</Word>
+ <Word Lang="el">Γεια σου</Word>
+ <Word Lang="en">Hello</Word>
+ <Word Lang="fa">سلام</Word>
+ <Word Lang="gu">હાય</Word>
+ <Word Lang="hi">हाय</Word>
+ <Word Lang="hy">Բարև</Word>
+ <Word Lang="is">Hæ</Word>
+ <Word Lang="iw">הי</Word>
+ <Word Lang="ja">こんにちは</Word>
+ <Word Lang="ka">გამარჯობა</Word>
+ <Word Lang="kk">Сәлем</Word>
+ <Word Lang="km">សួស្តី</Word>
+ <Word Lang="kn">ಹಾಯ್</Word>
+ <Word Lang="ko">안녕</Word>
+ <Word Lang="lo">ສະບາຍດີ</Word>
+ <Word Lang="ml">ഹായ്</Word>
+ <Word Lang="mr">हाय</Word>
+ <Word Lang="my">မင်္ဂလာပါ</Word>
+ <Word Lang="ne">नमस्ते</Word>
+ <Word Lang="pa">ਹਾਇ</Word>
+ <Word Lang="pl">Cześć</Word>
+ <Word Lang="ps">سلام</Word>
+ <Word Lang="ru">Привет</Word>
+ <Word Lang="sd">هيلو</Word>
+ <Word Lang="si">හායි</Word>
+ <Word Lang="sl">Živjo</Word>
+ <Word Lang="sr">Ћао</Word>
+ <Word Lang="ta">வணக்கம்</Word>
+ <Word Lang="th">สวัสดี</Word>
+ <Word Lang="ur">ہائے</Word>
+ <Word Lang="vi">Xin chào</Word>
+ <Word Lang="zh">你好</Word>
+</Greetings>
+<Thanks>
+ <Word Lang="am">አመሰግናለሁ</Word>
+ <Word Lang="ar">شكرا لك</Word>
+ <Word Lang="bn">ধন্যবাদ</Word>
+ <Word Lang="el">Σας ευχαριστώ</Word>
+ <Word Lang="en">Thank</Word>
+ <Word Lang="fa">ممنون</Word>
+ <Word Lang="gu">આભાર</Word>
+ <Word Lang="hi">आपका धन्यवाद</Word>
+ <Word Lang="hy">Շնորհակալություն</Word>
+ <Word Lang="is">Þakka þér fyrir</Word>
+ <Word Lang="iw">תודה</Word>
+ <Word Lang="ja">ありがとう</Word>
+ <Word Lang="ka">გმადლობk</Word>
+ <Word Lang="km">សូមអរគុណ</Word>
+ <Word Lang="kn">ಧನ್ಯವಾದಗಳು</Word>
+ <Word Lang="ko">감사합니다</Word>
+ <Word Lang="lo">ຂອບໃຈ</Word>
+ <Word Lang="ml">നന്ദി</Word>
+ <Word Lang="mr">धन्यवाद</Word>
+ <Word Lang="my">ကျေးဇူးတင်ပါတယ်</Word>
+ <Word Lang="ne">धन्यबाद</Word>
+ <Word Lang="pa">ਤੁਹਾਡਾ ਧੰਨਵਾਦ</Word>
+ <Word Lang="pl">Dziękuję</Word>
+ <Word Lang="ps">مننه</Word>
+ <Word Lang="ru">Спасибо</Word>
+ <Word Lang="sd">مهرباني</Word>
+ <Word Lang="si">ස්තූතියි</Word>
+ <Word Lang="ta">நன்றி</Word>
+ <Word Lang="th">ขอบคุณ</Word>
+ <Word Lang="ur">شکریہ</Word>
+ <Word Lang="vi">Cảm ơn</Word>
+ <Word Lang="zh_CN">谢谢啦</Word>
+</Thanks>
+</Words>

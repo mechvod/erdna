@@ -1,0 +1,8 @@
+- Replace loops with (logfile!=NULL) check inside (especially those loops that
+  process one byte per iteration) with two loops with and without logging
+  selected by (logfile!=NULL) check outside them.
+- Wrap all logging code within #ifdef ... #endif and build two binaries with
+  and without logging using -D compiler argument.
+- Write Sedna's debug trace to separate file from erdna's own debug log.
+- Add io:fwrite("~ts~n",[Data]) to examples.txt so that the reader can see
+  entire documents or records retrieved from Sedna or loaded into Sedna.

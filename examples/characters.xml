@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="yes"?>
+<Characters>
+ <Character Name="Gandalf" Race="man" Skill="wisard">
+  <Description>Gandalf is a powerful wisard, being in close friendship with men, elves, dwarves and hobbits. Gandalf actually is a maia embodied as a man.</Description>
+ </Character>
+ <Character Name="Aragorn" Race="man" Skill="swordsman">
+  <Description>Aragorn is a skillful warrior and served for a long time as a ranger. He is a legitimate heir of kingdom of Gondor.</Description>
+ </Character>
+ <Character Name="Frodo" Race="hobbit" Skill="">
+  <Description>Frodo is an ordinary hobbit, by occasion mandated to deliver The One Ring to Orodruin for destruction.</Description>
+ </Character>
+ <Character Name="Legolas" Race="elf" Skill="archer">
+  <Description>Legolas is the son of elven king and is very skillful at archery and fencing.</Description>
+ </Character>
+ <Character Name="Gimli" Race="dwarf" Skill="axeman">
+  <Description>Gimli is a noble dwarf wielding heavy double-sided axe. He also wears heavy helmet and arnmor.</Description>
+ </Character>
+</Characters>

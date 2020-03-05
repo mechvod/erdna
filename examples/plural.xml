@@ -1,0 +1,6 @@
+<?xml version="1.0" standalone="yes"?>
+<Words>
+ <Word Single="man" Plural="men"/>
+ <Word Single="elf" Plural="elves"/>
+ <Word Single="dwarf" Plural="dwarves"/>
+</Words>

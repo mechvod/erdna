@@ -1,0 +1,11 @@
+I do not use any build system and even makefiles because:
+a. There is only one C file and two erl files to compile, no complex set
+   of components bound by dependency relations.
+b. A few distros, if any, have Sedna in their packages, so user anyway
+   needs to manually specify locations of header and library files of Sedna's
+   C driver. Also ei header and library files location may vary on different
+   systems and their location needs to be somehow specified to compiler.
+   The rest of dependensies is just a standard C library which is found
+   by compiler in standard directories.
+c. I wrote this for my purposes and learning GNU Autotools or CMake for only
+   one program would be just a waist of time for me.

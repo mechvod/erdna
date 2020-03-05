@@ -1,0 +1,341 @@
+Here is a copy/paste of erlang shell commands and their output.
+My working directory was /home/test/src/erdna, I will copy it from terminal
+without changes.
+
+Connect to the database. Assume Sedna runs on the same host and the database
+name is "test". We use default account SYSTEM and password MANAGER, so we use
+simplifyed form, seconnect/4:
+
+> code:add_pathz("/home/test/src/erdna").
+true
+> c("/home/test/src/erdna/erdna_lib").
+{ok,erdna_lib}
+> {ok,Port}=erdna_lib:seconnect(<<"/home/test/src/erdna/erdna">>,true,<<"localhost">>,<<"test">>).
+{ok,#Port<0.2099>}
+
+Create a document by loading data from file and check its contents:
+
+> erdna_lib:seexecute(Port,<<"LOAD \"/home/test/src/erdna/examples/locations.xml\" \"locations\"">>).
+{ok,<<"Bulk load succeeded">>}
+> erdna_lib:seexecute(Port,<<"fn:doc(\"locations\")">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"<?xml version=\"1.0\" standalone=\"yes\"?>\n<Locations>\n  <Location Name=\"Shire\" InhabitantRace=\"hobbits\">\n    <D"...>>}
+> erdna_lib:senext(Port).
+{error,<<"End reached">>}
+
+Here the whole document is retrieved as a single node <Locations>...
+</Locations>, so it takes only one invocation of erdna_lib:senext/1 and
+erdna_lib:segetdata/1 to get it.
+
+When loading many documents it might be convenient to set working directory
+and specify XML files without full path:
+
+> erdna_lib:sesetconnectionattr(Port,<<"SEDNA_ATTR_SESSION_DIRECTORY">>,<<"/home/test/src/erdna/examples">>).
+{ok,<<"Attr set succeeded">>}
+> erdna_lib:segetconnectionattr(Port,<<"SEDNA_ATTR_SESSION_DIRECTORY">>).
+{ok,<<"/home/test/src/erdna/examples">>}
+> erdna_lib:seexecute(Port,<<"LOAD \"weapons.xml\" \"weapons\"">>).
+{ok,<<"Bulk load succeeded">>}
+> erdna_lib:seexecute(Port,<<"fn:doc(\"weapons\")">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"<?xml version=\"1.0\" standalone=\"yes\"?>\n<Weapons>\n  <Weapon Name=\"Anduril\" Type=\"Sword\" Owner=\"Aragorn\">\n    "...>>}
+> erdna_lib:senext(Port).
+{error,<<"End reached">>}
+> erdna_lib:seresetallconnectionattr(Port).
+{ok,<<"Attrs reset">>}
+
+Create a document by loading portions of data from client and check its
+contents:
+
+> {ok,Data1}=file:read_file("/home/test/src/erdna/examples/characters.xml.part1").
+{ok,<<"<Characters>\n <Character Name=\"Gandalf\" Race=\"man\" Skill=\"wisard\">\n  <Description>Gandalf is a powerful wisa"...>>}
+> {ok,Data2}=file:read_file("/home/test/src/erdna/examples/characters.xml.part2").
+{ok,<<" <Character Name=\"Aragorn\" Race=\"man\" Skill=\"swordsman\">\n  <Description>Aragorn is a skillful warrior and se"...>>}
+> {ok,Data3}=file:read_file("/home/test/src/erdna/examples/characters.xml.part3").
+{ok,<<" <Character Name=\"Legolas\" Race=\"elf\" Skill=\"archer\">\n  <Description>Legolas is the son of elven king and is"...>>}
+> erdna_lib:seloaddata(Port,Data1,<<"characters">>).
+{ok,<<"Data loaded">>}
+> erdna_lib:seloaddata(Port,Data2,<<"characters">>).
+{ok,<<"Data loaded">>}
+> erdna_lib:seloaddata(Port,Data3,<<"characters">>).
+{ok,<<"Data loaded">>}
+> erdna_lib:seendloaddata(Port).
+{ok,<<"Load finished">>}
+> erdna_lib:seexecute(Port,<<"fn:doc(\"characters\")/Characters">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"<Characters>\n  <Character Name=\"Gandalf\" Race=\"man\" Skill=\"wisard\">\n    <Description>Gandalf is a powerful w"...>>}
+> erdna_lib:senext(Port).
+{error,<<"End reached">>}
+
+Here we again get only one item of result as there is only one <Characters>...
+</Characters> node in the document.
+
+Create a document and fill it using UPDATE queries, then check its contents:
+
+> erdna_lib:seexecute(Port,<<"CREATE DOCUMENT \"plural\"">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:seexecute(Port,<<"UPDATE INSERT <Words/> INTO fn:doc(\"plural\")">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:seexecute(Port,<<"UPDATE INSERT <Word Single=\"man\" Plural=\"men\"/> INTO fn:doc(\"plural\")/Words">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:seexecute(Port,<<"UPDATE INSERT <Word Single=\"elf\" Plural=\"elves\"/> INTO fn:doc(\"plural\")/Words">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:seexecute(Port,<<"UPDATE INSERT <Word Single=\"dwarf\" Plural=\"dwarves\"/> INTO fn:doc(\"plural\")/Words">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:seexecute(Port,<<"fn:doc(\"plural\")/Words/Word">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"<Word Single=\"dwarf\" Plural=\"dwarves\"/>">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"<Word Single=\"elf\" Plural=\"elves\"/>">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"<Word Single=\"man\" Plural=\"men\"/>">>}
+> erdna_lib:senext(Port).
+{error,<<"End reached">>}
+
+Set session attribute and try manual transaction management.
+Rollback the transaction because of mistyped Race attribute, then run it again:
+
+> erdna_lib:sesetconnectionattr(Port,<<"SEDNA_ATTR_AUTOCOMMIT">>,<<"OFF">>).
+{ok,<<"Attr set succeeded">>}
+> erdna_lib:segetconnectionattr(Port,<<"SEDNA_ATTR_AUTOCOMMIT">>).
+{ok,<<"OFF">>}
+> erdna_lib:setransactionstatus(Port).
+{ok,<<"No transaction running">>}
+> erdna_lib:sebegin(Port).
+{ok,<<"Begin transaction succeeded">>}
+> erdna_lib:setransactionstatus(Port).
+{ok,<<"Transaction is running">>}
+> erdna_lib:seexecute(Port,<<"UPDATE INSERT <Character Name=\"Boromir\" Race=\"masn\" Skill=\"swordsman\"/> into fn:doc(\"characters\")/Characters">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:serollback(Port).
+{ok,<<"Rollback transaction succeeded">>}
+
+In order to see the document (to ensure that wrong data were not added) we need
+to start a separate transaction (even for read-only query). Note that senext/1
+and segetdata/1 must be run within the transaction, attempt to issue
+senext(Port) after the transaction is committed will result in
+{error,<<"No item">>}
+
+> erdna_lib:sebegin(Port).
+{ok,<<"Begin transaction succeeded">>}
+> erdna_lib:seexecute(Port,<<"fn:doc(\"characters\")">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"<?xml version=\"1.0\" standalone=\"yes\"?>\n<Characters>\n  <Character Name=\"Gandalf\" Race=\"man\" Skill=\"wisard\">\n "...>>}
+> erdna_lib:senext(Port).
+{error,<<"End reached">>}
+> erdna_lib:secommit(Port).
+{ok,<<"Commit transaction succeeded">>}
+
+> erdna_lib:sebegin(Port).
+{ok,<<"Begin transaction succeeded">>}
+> erdna_lib:setransactionstatus(Port).
+{ok,<<"Transaction is running">>}
+> erdna_lib:seexecute(Port,<<"UPDATE INSERT <Character Name=\"Boromir\" Race=\"man\" Skill=\"swordsman\"/> into fn:doc(\"characters\")/Characters">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:seexecute(Port,<<"UPDATE INSERT <Description>Boromir is the elder of two sons of Denethor, Steward of Gondor. His valor, physical power and commander abilities won him great authority among people of Gondor.</Description> into fn:doc(\"characters\")/Characters/Character[@Name eq \"Boromir\"]">>).
+{ok,<<"Update succeeded">>}
+> erdna_lib:secommit(Port).
+{ok,<<"Commit transaction succeeded">>}
+> erdna_lib:sesetconnectionattr(Port,<<"SEDNA_ATTR_AUTOCOMMIT">>,<<"ON">>).
+{ok,<<"Attr set succeeded">>}
+> erdna_lib:segetconnectionattr(Port,<<"SEDNA_ATTR_AUTOCOMMIT">>).
+{ok,<<"ON">>}
+
+Now we are going to run read-only queries, so we can set concurrency to
+"readonly", this will speed up read-only queries.
+
+> erdna_lib:sesetconnectionattr(Port,<<"SEDNA_ATTR_CONCURRENCY_TYPE">>,<<"READONLY">>).
+{ok,<<"Attr set succeeded">>}
+> erdna_lib:segetconnectionattr(Port,<<"SEDNA_ATTR_CONCURRENCY_TYPE">>).
+{error,<<"Unspecified error">>}
+
+Attempt to get this specific attribute gives an error (because
+segetconnectionattr/1 can only get values kept at client side as a properties
+of open connection), check the details:
+
+> erdna_lib:segetlasterrorcode(Port).
+{ok,<<"243">>}
+> erdna_lib:segetlasterrormsg(Port).
+{ok,<<"SEDNA Message: ERROR SE3022\nInvalid argument.">>}
+
+Run XQuery script kept in a file, for that set working directory to the
+directory where the script resides:
+
+> erdna_lib:sesetconnectionattr(Port,<<"SEDNA_ATTR_SESSION_DIRECTORY">>,<<"/home/test/src/erdna/examples">>).
+{ok,<<"Attr set succeeded">>}
+> erdna_lib:segetconnectionattr(Port,<<"SEDNA_ATTR_SESSION_DIRECTORY">>).
+{ok,<<"/home/test/src/erdna/examples">>}
+> erdna_lib:seexecutelong(Port,<<"lands.xq">>).
+{error,<<"Unspecified error">>}
+> erdna_lib:segetlasterrormsg(Port).
+{ok,<<"SEDNA Message: ERROR SE3081\nCannot open a file with a long query to execute.">>}
+
+Remember that setting this attribute affects only LOAD queries, so use full
+path for seexecutelong/2.
+
+> erdna_lib:seexecutelong(Port,<<"/home/test/src/erdna/examples/lands.xq">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"Boromir is a man and Gondor is the land of men.">>}
+erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"Gandalf is a man and Gondor is the land of men.">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"Aragorn is a man and Gondor is the land of men.">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"Frodo is a hobbit and Shire is the land of hobbits.">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"Legolas is an elf and Rivendell is the land of elves.">>}
+> erdna_lib:senext(Port).
+{ok,<<"Next succeeded">>}
+> erdna_lib:segetdata(Port).
+{ok,<<"Gimli is a dwarf and Moria is the land of dwarves.">>}
+> erdna_lib:senext(Port).
+{error,<<"End reached">>}
+
+All items can be retrieved in one step:
+
+> erdna_lib:seexecutelong(Port,<<"lands.xq">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:segetalldata(Port).
+[<<"Boromir is a man and Gondor is the land of men.">>,
+ <<"Gandalf is a man and Gondor is the land of men.">>,
+ <<"Aragorn is a man and Gondor is the land of men.">>,
+ <<"Frodo is a hobbit and Shire is the land of hobbits.">>,
+ <<"Legolas is an elf and Rivendell is the land of elves.">>,
+ <<"Gimli is a dwarf and Moria is the land of dwarves.">>]
+
+If you have installed exomler by SCDependencies, you can use
+segetparsealldata/1 when query result is a valid XML code:
+
+> code:add_pathz("/home/test/src/exomler/ebin").
+true
+> code:add_pathz("/home/test/src/exomler/deps/parselib/ebin").
+true
+> erdna_lib:seexecute(Port,<<"fn:doc(\"characters\")">>).
+{ok,<<"Query succeeded">>}
+> erdna_lib:segetparsealldata(Port).
+[{<<"Characters">>,[],
+  [{<<"Character">>,
+    [{<<"Name">>,<<"Boromir">>},
+     {<<"Race">>,<<"man">>},
+     {<<"Skill">>,<<"swordsman">>}],
+    [{<<"Description">>,[],
+      [<<"Boromir is the elder of two sons of Denethor, Steward of Gondor."...>>]}]},
+   {<<"Character">>,
+    [{<<"Name">>,<<"Gandalf">>},
+     {<<"Race">>,<<"man">>},
+     {<<"Skill">>,<<"wisard">>}],
+    [{<<"Description">>,[],
+      [<<"Gandalf is a powerful wisard, being in close friendship with"...>>]}]},
+   {<<"Character">>,
+    [{<<"Name">>,<<"Aragorn">>},
+     {<<"Race">>,<<"man">>},
+     {<<"Skill">>,<<"swordsman">>}],
+    [{<<"Description">>,[],
+      [<<"Aragorn is a skillful warrior and served for a long time"...>>]}]},
+   {<<"Character">>,
+    [{<<"Name">>,<<"Frodo">>},
+     {<<"Race">>,<<"hobbit">>},
+     {<<"Skill">>,<<>>}],
+    [{<<"Description">>,[],
+      [<<"Frodo is a ordinary hobbit, by occasion mandated to "...>>]}]},
+   {<<"Character">>,
+    [{<<"Name">>,<<"Legolas">>},
+     {<<"Race">>,<<"elf">>},
+     {<<"Skill">>,<<"archer">>}],
+    [{<<"Description">>,[],
+      [<<"Legolas is the son of elven king and is very ski"...>>]}]},
+   {<<"Character">>,
+    [{<<"Name">>,<<"Gimli">>},
+     {<<"Race">>,<<"dwarf">>},
+     {<<"Skill">>,<<"axeman">>}],
+    [{<<"Description">>,[],
+      [<<"Gimli is a noble dwarf wielding heavy double"...>>]}]}]}]
+
+Set up debug trace and watch the result:
+
+> erdna_lib:sesetdebughandler(Port,<<"log">>).
+{ok,<<"Debug logging started">>}
+> erdna_lib:sesetconnectionattr(Port,<<"SEDNA_ATTR_DEBUG">>,<<"ON">>).
+{ok,<<"Attr set succeeded">>}
+> erdna_lib:seexecute(Port,<<"fn:doc(\"nonexistent_document\")">>).
+{error,<<"Query failed">>}
+> erdna_lib:segetlasterrormsg(Port).
+{ok,<<"SEDNA Message: ERROR FODC0002\nError retrieving resource. \nDetails: Document 'nonexistent_document'\nStack tra"...>>}
+> erdna_lib:sesetconnectionattr(Port,<<"SEDNA_ATTR_DEBUG">>,<<"OFF">>).
+{ok,<<"Attr set succeeded">>}
+> erdna_lib:sesetdebughandler(Port,<<"none">>).
+{ok,<<"Debug logging stopped">>}
+
+In the log file should be (among other output) something like this:
+
+Debug : <stack xmlns='http://www.modis.ispras.ru/sedna'>
+  <operation name='PPAbsPath' line='1' column='1' calls='1'/>
+  <operation name='PPQueryRoot' calls='1'/>
+</stack>
+
+To check erdna's ability to process multilingual Unicode data, load the
+document with words in various languages:
+
+> erdna_lib:seexecute(Port,<<"LOAD \"/home/test/src/erdna/examples/utf8_words.xml\" \"utf8_words\"">>).
+{ok,<<"Bulk load succeeded">>}
+
+Retrieve a few words and see how they look when printed. Note the t modifier
+in ~ts format construct:
+
+> erdna_lib:seexecute(Port,<<"fn:doc(\"utf8_words\")/Words/*/Word[@Lang eq \"ru\"]">>).
+{ok,<<"Query succeeded">>}
+> {ok,Data1}=erdna_lib:segetnextdata(Port).
+{ok,<<60,87,111,114,100,32,76,97,110,103,61,34,114,117,
+      34,62,208,159,209,128,208,184,208,178,208,181,209,
+      ...>>}
+5> io:fwrite("~ts~n",[Data1]).
+<Word Lang="ru">Привет</Word>
+ok
+> {ok,Data2}=erdna_lib:segetnextdata(Port).
+{ok,<<60,87,111,114,100,32,76,97,110,103,61,34,114,117,
+      34,62,208,161,208,191,208,176,209,129,208,184,208,
+      ...>>}
+> io:fwrite("~ts~n",[Data2]).
+<Word Lang="ru">Спасибо</Word>
+ok
+
+Create a simple web page based on that document:
+> utf8_words:make_page(<<"/home/test/src/erdna/erdna">>,<<"localhost">>,<<"test">>,<<"/home/test/src/erdna/examples/testpage.html">>).
+true
+
+First three arguments are connection parameters for erdna - path to erdna
+executable, Sedna DB URL and DB name (logging is hardcoded to 'false'). Forth
+argument is path to output html page, which can be then viewed in browser.
+For each word there is a link to Google translation service provided on
+the page. Temporal file with XQuery script is not removed but left behind
+for curious user.
