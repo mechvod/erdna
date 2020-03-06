@@ -89,7 +89,7 @@ seclose(Port) ->
 
 %% @doc Set value for connection parameter ("attribute"). For the list of
 %% possible attributes and their values see Sedna Programmer's Guide.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @param AttrName Attribute name, a binary.
 %% @param AttrValue Value to be assigned? a binary.
 %% @returns {ok,<<"Attr set succeeded">>} on success or {error,<<Description>>}
@@ -110,7 +110,7 @@ sesetconnectionattr(Port, AttrName, AttrValue) ->
 
 %% @doc Get current value of connection attribute (except few ones - see
 %% readme.txt).
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @param AttrName Name of the attribute of interest, a binary.
 %% @returns {ok,<<Value>>} on success or {error,<<Description>>} on failure.
 segetconnectionattr(Port, AttrName) -> 
@@ -118,7 +118,7 @@ segetconnectionattr(Port, AttrName) ->
     run_command(Port,Data).
 
 %% @doc Set all attributes for current session to their default values.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Attrs reset">>} on success or {error,<<Description>>}
 %% otherwise.
 seresetallconnectionattr(Port) ->
@@ -126,7 +126,7 @@ seresetallconnectionattr(Port) ->
     run_command(Port,Data).
 
 %% @doc Manually begin transaction (when autocommit is disabled).
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Begin transaction succeeded">>} on success or {error,
 %% <<Description>>} on failure.
 sebegin(Port) ->
@@ -135,7 +135,7 @@ sebegin(Port) ->
 
 %% @doc Manually commits currently started transaction, pending changes will
 %% be applied.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Commit transaction succeeded">> on success or {error,
 %% <<Description>>} on failure.
 secommit(Port) ->
@@ -144,7 +144,7 @@ secommit(Port) ->
 
 %% @doc Manually rolls back currently started transaction, pending changes will
 %% be lost.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Rollback transaction succeeded">>} on success or {error,
 %% <<Description>>} on failure.
 serollback(Port) ->
@@ -153,7 +153,7 @@ serollback(Port) ->
 
 %% @doc Check connection to Sedna server. This function should not be relied
 %% upon (see readme.txt for details).
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Connection open">>} or {ok,<<"Connection closed">>}
 %% when executed successully, or {error,<<Description>>} on failure.
 seconnectionstatus(Port) ->
@@ -161,7 +161,7 @@ seconnectionstatus(Port) ->
     run_command(Port,Data).
 
 %% @doc Informs whether a transaction has been started and not yet commeted.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Transaction is running">>} or {ok,
 %% <<"No transaction running">>} on success, {error,<<Description>>} on
 %% failure.
@@ -170,7 +170,7 @@ setransactionstatus(Port) ->
     run_command(Port,Data).
 
 %% @doc Send a query to Sedna server for execution.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @param Query XQuery statement to be executed, a binary.
 %% @returns either {ok,<<"Query succeeded">>} or {ok,<<"Update succeeded">>}
 %% or {ok,<<"Bulk load succeeded">> on success, {error,<<Description>>}
@@ -180,7 +180,7 @@ seexecute(Port,Query) ->
     run_command(Port,Data).
 
 %% @doc Execute an XQuery script stored in a file.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @param Path Full path to XQuery script file, a binary (or relative path
 %% when SEDNA_ATTR_SESSION_DIRECTORY is set).
 %% @returns {ok,<<"Query succeeded">>} or {ok,<<"Update succeeded">>}
@@ -192,7 +192,7 @@ seexecutelong(Port, Path) ->
 
 %% @doc Select an item from the query result waiting for retrieval. Must be
 %% executed before requesting the item.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Next succeeded">>} on success, {error,<<Description>>}
 %% otherwise.
 senext(Port) ->
@@ -200,7 +200,7 @@ senext(Port) ->
     run_command(Port,Data).
 
 %% @doc Get one item from the query result.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<Data>>} on success, {error,<<Description>>} otherwise.
 segetdata(Port) ->
     Data=erlang:term_to_binary({segetdata}),
@@ -208,7 +208,7 @@ segetdata(Port) ->
 
 %% @doc Set handler for Sedna debug data (handler is a pointer to a function
 %% provided in erdna).
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @param Type Name of handler, a binary. Currently can only be LOG or NONE.
 %% @returns {ok,<<"Debug logging started">>} or {ok,
 %% <<"Debug logging stopped">>} on success, {error,<<Description>>} on failure.
@@ -218,7 +218,7 @@ sesetdebughandler(Port,Type) ->
 
 %% @doc Load piece of XML data to Sedna document. Sequence of pieces must
 %% form a valid XML document.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @param DataChunk - fragment of document, a binary.
 %% @param Document - target document name, a binary.
 %% @returns {ok,<<"Data loaded">>} on success or {error,<<Description>>} on
@@ -229,7 +229,7 @@ seloaddata(Port, DataChunk, Document) ->
 
 %% @doc Load piece of XML data to Sedna document in specified collection.
 %% Sequence of pieces must form a valid XML document.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @param DataChunk - fragment of document, a binary.
 %% @param Document - target document name, a binary.
 %% @param Collection - collection to which target document belongs.
@@ -240,7 +240,7 @@ seloaddata(Port, DataChunk, Document, Collection) ->
 
 %% @doc Indicate end of data just loaded and make Sedna to proceed to create
 %% the document and place the data in it.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<"Load finished">>} on success or {error,<<Description>>} on
 %% failure.
 seendloaddata(Port) ->
@@ -251,7 +251,7 @@ seendloaddata(Port) ->
 
 %% @doc Set pointer to next item in query result and retrieve it from the
 %% server.
-%% @param Port Erlang por to running erdna process.
+%% @param Port Erlang port to running erdna process.
 %% @returns {ok,<<Data>>} on success, {error,<<Description>>} on failure.
 segetnextdata(Port) ->
     case senext(Port) of
@@ -260,16 +260,28 @@ segetnextdata(Port) ->
     end.
 
 %% @doc Get all items of query result currently waiting to be retrieved.
-%% @param Port Erlang por to running erdna process.
-%% @returns [<<Data1>>,<<Data2>>,...]
+%% @param Port Erlang port to running erdna process.
+%% @returns [<<Data1>>,<<Data2>>,...] on success (list can be empty), or
+%% {error,<<Description>>} on failure.
 segetalldata(Port) ->
     segetalldata(Port,[]).
 
+%% @doc Get items of query result  currently waiting to be retrieved and
+%% parse them usung exomler.
+%% @param Port Erlang port to running erdna process.
+%% @returns [Tuple,Tuple,...] on success or {error,<<Description>>}
+%% on failure.
 segetparsealldata(Port) ->
     segetparsealldata(Port,[]).
 
 
 %% internals
+%% @doc Actually performs all tasks, implemented in functions above, by sending
+%% command and, optionally, data to running erdna process.
+%% @param Port Erlang port to running erdna process.
+%% @param Data Binary-encoded tuple, composed of command (an atom) and optional
+%% data (a binary).
+%% @returns Data received from erdna via port.
 run_command(Port,Data) ->
     erlang:port_command(Port,Data),
     Result=receive
@@ -285,6 +297,12 @@ run_command(Port,Data) ->
            end,
     Result.
 
+%% @doc Get next query result item from Sedna and store it into accumulator,
+%% then re-invoke itself; return contents of accumulator when no items left.
+%% @param Port Erlang port to running erdna process.
+%% @param Accum List of items retrieved from Sedna.
+%% @returns [<<Data1>>,<<Data2>>,...] on success (list can be empty), or
+%% {error,<<Description>>} on failure.
 segetalldata(Port,Accum) ->
 %% Retrieves all data waiting for retrieval after seexecute/2.
 %% This function is supposed to be executed just after seexecute/2, so
@@ -297,10 +315,18 @@ segetalldata(Port,Accum) ->
                      segetalldata(Port,NewAccum);
                 Error -> Error
             end;
-        _ -> lists:reverse(Accum)
+        {error,<<"End reached">>} ->
+            lists:reverse(Accum);
+        {error,<<"No item">>} -> [];
+        Error -> Error
     end.
 
-
+%% @doc Consequently get all query result items from Sedna, parse them and
+%% store into accumulator.
+%% @param Port Erlang port to running erdna process.
+%% @param Accum List of retrieved and parsed items.
+%% @returns [Tuple,Tuple,...] on success or {error,<<Description>>} in case of
+%% failur.
 segetparsealldata(Port,Accum) ->
 %% Retrieves all data waiting for retrieval after seexecute/2 and
 %% immediately parses each record just upon its retrieval. This eliminates
@@ -319,17 +345,3 @@ segetparsealldata(Port,Accum) ->
         _ -> lists:reverse(Accum)
     end.
 
-
-
-%    NewAccum=case segetdata(Port) of
-%                 {error,_} -> Accum;
-%                 {ok,Data} ->
-%                     case Data of
-%                         <<>> -> Accum;
-%                         _ -> [exomler:decode(Data)|Accum]
-%                     end
-%             end,
-%    case senext(Port) of
-%        {ok,_} -> segetparsealldata(Port,NewAccum);
-%        _ -> lists:reverse(NewAccum)
-%    end.
