@@ -151,7 +151,7 @@ seresetallconnectionattr(Port) ->
 %% @doc Manually begin transaction (when autocommit is disabled).
 %% @param Port Erlang port to running erdna process.
 %% @returns {ok,&lt;&lt;"Begin transaction succeeded"&gt;&gt;} on success or
-%%  {error,&lt;&lt;Description>>} on failure.
+%%  {error,&lt;&lt;Description&gt;&gt;} on failure.
 -spec sebegin(port())
       -> {ok,binary()} | {error,binary()}.
 sebegin(Port) ->
