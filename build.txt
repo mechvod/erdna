@@ -9,3 +9,9 @@ b. A few distros, if any, have Sedna in their packages, so user anyway
    by compiler in standard directories.
 c. I wrote this for my purposes and learning GNU Autotools or CMake for only
    one program would be just a waist of time for me.
+There are two binaries compiled - with and without logging. The one without
+logging still creates logfile when run with "-log" argument, but writes nothing
+to it.
+The binary is compiled statically just because I like it more than using
+LD_LIBRARY_PATH. If you adhere this approach, you might need to install
+a package named somewhat like "devel_libc_static_blahblahblah".
